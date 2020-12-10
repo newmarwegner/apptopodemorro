@@ -1,0 +1,70 @@
+## após criar o calculo de area nos poligonos gerar pontos para busca de cumes
+create table pontos as(
+select row_number()over()as id,elev,st_pointonsurface(geom)::geometry(Point,32723) as geom
+from iso_pol
+where area<30000)
+
+## criar o empilhamento dos poligonos para achar cumes
+create table multipol_cumes as(
+select row_number()over()as id,elev,geom
+from iso_pol
+where area<30000)
+
+## realizar o dissolve da camada multipol_cumes, multipartes para partes simples e subir no banco
+
+
+## gerar os pontos de cume 
+create table pontos_sup as (
+select row_number()over()as id,total.*
+from 
+(select max(b.elev),a.id_pk as cod, b.geom
+from simple_partes a, pontos b
+where st_intersects(a.geom,b.geom) group by a.id_pk, b.geom order by cod) as total,
+(select max(b.elev),a.id_pk as cod
+from simple_partes a, pontos b
+where st_intersects(a.geom,b.geom) group by a.id_pk order by cod) as gid
+where total.max=gid.max and total.cod=gid.cod
+group by total.geom,total.max,total.cod
+order by cod
+)
+
+
+## gerar empilhamento de poligonos para obter a base (ponto de sela)
+create table empilhamento as(
+select row_number()over()as id_pk,c.id,gid.elev,gid.geom
+from pontos_sup c,
+(select row_number()over()as id,elev,count(a.*),b.geom
+from pontos_sup a, iso_pol b
+where st_intersects(b.geom,a.geom)
+group by b.geom,b.elev
+having count(a.*)=1) as gid
+where st_intersects(gid.geom,c.geom)
+)
+
+## gerar camada com um poligono representando a base
+create table bases as(
+select row_number()over()as id_pk,idmin.id,idmin.elev,c.geom
+from empilhamento c,
+(select a.id, min(elev) elev
+from empilhamento a, pontos_sup b
+where st_intersects(b.geom,a.geom)
+group by a.id
+order by id) as idmin
+where idmin.id=c.id and c.elev=idmin.elev
+)
+
+
+## criar nova camada com todas as informações necessarias para o limite de cada morro
+create table base_info as (
+select row_number() over() as id,b.cod,a.elev as min,b.max,(b.max-a.elev) as amplitude,
+(b.max-((b.max-a.elev)/3)) as terco, a.geom 
+from bases a, pontos_sup b
+where st_intersects(a.geom,b.geom)
+)
+
+## Filtrar morros conforme legislação
+create table morros as (
+select row_number()over() as id_pk, cod,min,max,amplitude,terco,_slopemean as slope,geom
+from base_info
+where amplitude>=100 and _slopemean>=25
+)
