@@ -1,6 +1,6 @@
 ## após criar o calculo de area nos poligonos gerar pontos para busca de cumes
 create table pontos as(
-select row_number()over()as id,elev,st_pointonsurface(geom)::geometry(Point,32723) as geom
+select row_number()over()as id,elev,st_pointonsurface(geom)::geometry(Point,5880) as geom
 from iso_pol
 where area<30000)
 
