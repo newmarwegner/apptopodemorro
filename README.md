@@ -16,3 +16,6 @@ A fim de automatizar os processos gerados anteriormente, foi utilizado o modelad
 Cabe ressaltar que todas as conexões com banco de dados está sendo realizado no modelo com apontamentos para um banco postgresql localhost denominado "invasao", logo deve-se ter atenção a isto para a correta execução do modelo.
 [[Demonstração de execução]](https://youtu.be/hGXahGdcJ9I)
 Para execução do modelo é necessário adicioná-lo ao QGIS a partir da caixa de ferramentas - adicionar modelo a caixa de ferramentas.
+
+## Bug fixes
+22/12/2020 - Adequação do modelo para não necessitar alterar src do projeto. Assim os dados de entrada precisam ser em wgs 84 e terão como destino arquivos projetados no src 5880 (sirgas 2000 polyconic).
