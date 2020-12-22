@@ -1012,7 +1012,19 @@
         <Option name="TARGET_CRS" type="List">
           <Option type="Map">
             <Option value="2" name="source" type="int"/>
-            <Option value="ProjectCrs" name="static_value" type="QString"/>
+            <Option name="static_value" type="QgsCoordinateReferenceSystem">
+              <spatialrefsys>
+                <wkt>PROJCS["SIRGAS 2000 / Brazil Polyconic",GEOGCS["SIRGAS 2000",DATUM["Sistema_de_Referencia_Geocentrico_para_las_AmericaS_2000",SPHEROID["GRS 1980",6378137,298.257222101,AUTHORITY["EPSG","7019"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6674"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4674"]],PROJECTION["Polyconic"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-54],PARAMETER["false_easting",5000000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["X",EAST],AXIS["Y",NORTH],AUTHORITY["EPSG","5880"]]</wkt>
+                <proj4>+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</proj4>
+                <srsid>29021</srsid>
+                <srid>5880</srid>
+                <authid>EPSG:5880</authid>
+                <description>SIRGAS 2000 / Brazil Polyconic</description>
+                <projectionacronym>poly</projectionacronym>
+                <ellipsoidacronym>GRS80</ellipsoidacronym>
+                <geographicflag>false</geographicflag>
+              </spatialrefsys>
+            </Option>
           </Option>
         </Option>
       </Option>
